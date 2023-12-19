@@ -1,6 +1,6 @@
 // MenuInfoPanel.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from './UI/Button';
 import { cellType, removeFromCell } from '../store/fieldSlice';
@@ -12,13 +12,19 @@ const MenuInfoPanel: React.FC = () => {
   const selectedCell = useSelector((state: RootState) => state.field.selectedCell);
   const removeBudget = useSelector((state: RootState) => state.field.selectedCell?.removeCredit);
   const fieldState = useSelector((state: RootState) => state.field);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const dispatch = useDispatch();
 
   const handleRemoveCell = () => {
+    setIsAnimating(true);
     if (!selectedCell || selectedCell?.type === cellType.grass || selectedCell?.type === cellType.water) return;
     dispatch(removeFromCell(selectedCell))
     dispatch(addToHistory(fieldState))
+
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 1500);
   };
 
   const diabled = selectedCell?.type === cellType.grass || selectedCell?.type === cellType.water;
@@ -33,7 +39,7 @@ const MenuInfoPanel: React.FC = () => {
       </div>
       <div className='flex flex-row items-center'>
         <label>Action: </label>
-        <Button buttonTitle={`Remove (${removeBudget || "No selected cell"})`} disabled={diabled || !removeBudget} onClick={handleRemoveCell} />
+        <Button buttonTitle={`Remove (${removeBudget || "No selected cell"})`} disabled={diabled || !removeBudget} styles={`${isAnimating ? 'animate-bounce' : ''}`} onClick={handleRemoveCell} />
       </div>
     </div>
   );

@@ -17,6 +17,8 @@ const FieldMenu: React.FC = () => {
         dispatch(selectMenuCell(cell));
     }, [])
 
+    const animateStyle = 'border-yellow-400 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110'
+
     return (
         <div className="m-5 text-center p-3 bg-orange-50">
             <h1 className='text-4xl font-semibold font-title m-4'>Terrain Builder</h1>
@@ -25,11 +27,11 @@ const FieldMenu: React.FC = () => {
             <h3 className='h-6 text-red-600'>{erroMessage}</h3>
             <div className='flex flex-row justify-center gap-2'>
                 <MenuItem menuName={MenuNames.Rock} onClick={() => handleCellMenuSelect(cellType.rock)}
-                    selectedClass={`${selectedMenuCell?.type === cellType.rock ? "border-yellow-400 " : ""}`} />
+                    selectedClass={`${selectedMenuCell?.type === cellType.rock ? animateStyle : ""}`} />
                 <MenuItem menuName={MenuNames.Water} onClick={() => handleCellMenuSelect(cellType.water)}
-                    selectedClass={`${selectedMenuCell?.type === cellType.water ? "border-yellow-400 " : ""}`} />
+                    selectedClass={`${selectedMenuCell?.type === cellType.water ? animateStyle : ""}`} />
                 <MenuItem menuName={MenuNames.House} onClick={() => handleCellMenuSelect(cellType.house)}
-                    selectedClass={`${selectedMenuCell?.type === cellType.house ? "border-yellow-400 " : ""}`} />
+                    selectedClass={`${selectedMenuCell?.type === cellType.house ? animateStyle : ""}`} />
             </div>
         </div>
     );

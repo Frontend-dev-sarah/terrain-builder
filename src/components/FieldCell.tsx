@@ -17,9 +17,6 @@ const FieldCell: React.FC = () => {
     const selectedMenuCell = useSelector((state: RootState) => state.field.selectedMenuCell)
     const selectedCell = useSelector((state: RootState) => state.field.selectedCell)
 
-    // useCallback(() => {
-    //     if (!noBudget && fieldState.previousType === 'grass') dispatch(addToHistory(fieldState))
-    // }, [selectedMenuCell, fieldState])
 
     useEffect(() => {
         if (selectedMenuCell && !noBudget && fieldState.previousType === 'grass') dispatch(addToHistory(fieldState))
@@ -46,7 +43,7 @@ const FieldCell: React.FC = () => {
                             return (
                                 <div
                                     key={x}
-                                    className={`w-16 h-16 border-2 text-center ${type} ${selectedCell?.x === x && selectedCell?.y === y ? "border-yellow-500 border-4 " : ""}`}
+                                    className={`w-16 h-16 border-2 text-center ${type} ${selectedCell?.x === x && selectedCell?.y === y ? "border-yellow-500 border-4 animate-pulse" : ""}`}
                                     onClick={() => handleCellClick({
                                         type, x, y,
                                     })}>
