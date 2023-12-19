@@ -1,0 +1,13 @@
+.grass {
+  @apply bg-green-500;
+}
+.rock {
+  @apply bg-gray-400;
+}
+
+.house {
+  @apply bg-black;
+}
+.water {
+  @apply bg-blue-300;
+}
