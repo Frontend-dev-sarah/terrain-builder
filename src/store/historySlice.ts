@@ -1,7 +1,7 @@
 // historySlice.ts
 
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { FieldState, cellType } from './fieldSlice';
+import { FieldState } from './fieldSlice';
 
 interface HistoryState {
   past: FieldState[];
@@ -9,30 +9,10 @@ interface HistoryState {
   future: FieldState[];
 }
 
-const generateField = () => {
-  const field = [];
-
-  for (let i = 0; i < 10; i++) {
-    const row = [];
-
-    for (let j = 0; j < 10; j++) {
-      // Set default type to grass
-      let type = cellType.grass;
-      // Randomly select some cells as rocks
-      if (Math.random() < 0.1) {
-        type = cellType.rock;
-      }
-      row.push({ type });
-    }
-    field.push(row);
-  }
-  return field;
-};
-
 const initialFieldState: FieldState = {
   selectedMenuCell: null,
   selectedCell: null,
-  field: generateField(),
+  field: [],
   budget: 100,
   noBudget: false,
   erroMessage: ''
@@ -76,7 +56,12 @@ const historySlice = createSlice({
     },
     goToSpecificState: (state, action: PayloadAction<FieldState>) => {
       state.present = action.payload;
-      const index = state.past.findIndex((state) => state === action.payload);
+      const index = JSON.parse(JSON.stringify(state.past)).findIndex((state: FieldState) => {
+        //because budget changes for every history, we can compare the budget to find the index, 
+        //of course to check the equality of two objects, we can also use loadash isEqual method: _.isEqual(state, action.payload)
+        return state.budget === action.payload.budget
+      });
+
       state.past = state.past.slice(0, index);
       state.future = [];
     }

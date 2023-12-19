@@ -1,6 +1,6 @@
 // FieldMenu.tsx
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MenuItem, { MenuNames } from './UI/MenuItem';
 import { RootState } from '../store';
@@ -12,10 +12,10 @@ const FieldMenu: React.FC = () => {
 
     const dispatch = useDispatch();
 
-    const handleCellMenuSelect = (cellType: cellType) => {
+    const handleCellMenuSelect = useCallback((cellType: cellType) => {
         const cell = { type: cellType }
         dispatch(selectMenuCell(cell));
-    };
+    }, [])
 
     return (
         <div className="m-5 text-center p-3 bg-orange-50">

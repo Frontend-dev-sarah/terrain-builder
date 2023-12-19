@@ -1,6 +1,6 @@
 // fieldSlice.ts
 
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getPlaceBudget, getRemoveBudget } from '../utils/helpers';
 
 export enum cellType {
@@ -105,8 +105,6 @@ const fieldSlice = createSlice({
             };
             //change action type
             state.actionType = 'place';
-            state.selectedMenuCell = null;
-
         },
         removeFromCell: (state, action: PayloadAction<SelectedCell>) => {
             const { type, x, y } = action.payload;
@@ -140,7 +138,21 @@ const fieldSlice = createSlice({
             }
         }
     },
+    extraReducers: (builder) => {
+        builder.addCase(slowClearSelectedMenu.fulfilled, (state) => {
+            state.selectedMenuCell = null;
+        });
+    }
 });
+
+export const slowClearSelectedMenu = createAsyncThunk('placeOnCell', async () => {
+    return new Promise<void>((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, 500);
+    });
+});
+
 
 export const {
     selectMenuCell,

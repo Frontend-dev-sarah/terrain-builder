@@ -1,10 +1,12 @@
 // FieldCell.tsx
 
-import React from 'react';
+// FieldCell.tsx
+
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import '../../src/utils/field.css';
-import { Cell, SelectedCell, placeOnCell, selectMenuCell, selectCell } from '../store/fieldSlice';
+import { SelectedCell, placeOnCell, selectMenuCell, selectCell, slowClearSelectedMenu } from '../store/fieldSlice';
 import { addToHistory } from '../store/historySlice';
 
 const FieldCell: React.FC = () => {
@@ -13,23 +15,26 @@ const FieldCell: React.FC = () => {
     const field = useSelector((state: RootState) => state.field.field);
     const noBudget = useSelector((state: RootState) => state.field.noBudget);
     const selectedMenuCell = useSelector((state: RootState) => state.field.selectedMenuCell)
+    const selectedCell = useSelector((state: RootState) => state.field.selectedCell)
 
-    const handleCellClick = (selection: SelectedCell) => {
+    // useCallback(() => {
+    //     if (!noBudget && fieldState.previousType === 'grass') dispatch(addToHistory(fieldState))
+    // }, [selectedMenuCell, fieldState])
 
+    useEffect(() => {
+        if (selectedMenuCell && !noBudget && fieldState.previousType === 'grass') dispatch(addToHistory(fieldState))
+    }, [fieldState.selectedCell])
+
+
+    const handleCellClick = useCallback((selection: SelectedCell) => {
         if (selectedMenuCell) {
-            place(selection, selectedMenuCell)
+            dispatch(selectMenuCell(selectedMenuCell))
+            dispatch(placeOnCell(selection))
+            dispatch(slowClearSelectedMenu())
             return;
         }
-
         dispatch(selectCell(selection))
-    };
-
-    const place = (selection: SelectedCell, selectedMenuCell: Cell) => {
-        dispatch(selectMenuCell(selectedMenuCell))
-        dispatch(placeOnCell(selection))
-
-        if (!noBudget && fieldState.previousType === 'grass') dispatch(addToHistory(fieldState))
-    }
+    }, [selectedMenuCell])
 
     return (
         <div className='grid justify-items-center col-span-3'>
@@ -41,11 +46,11 @@ const FieldCell: React.FC = () => {
                             return (
                                 <div
                                     key={x}
-                                    className={`w-16 h-16 border-2 ${type}`}
+                                    className={`w-16 h-16 border-2 text-center ${type} ${selectedCell?.x === x && selectedCell?.y === y ? "border-yellow-500 border-4 " : ""}`}
                                     onClick={() => handleCellClick({
                                         type, x, y,
                                     })}>
-                                    {type}
+                                    {`${y}, ${x}`}
                                 </div>
                             )
                         })}
